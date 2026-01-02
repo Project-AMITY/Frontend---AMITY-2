@@ -54,7 +54,7 @@ const HomepageHero = () => {
 
         {/* CTA Button */}
         <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-          <Link to="/events">
+          <Link to="/opportunities">
             <button className="h-12 px-8 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
               Explore Opportunities
               <span className="material-symbols-outlined text-[18px]">
