@@ -4,6 +4,7 @@ import HomepageHero from '../components/HomepageHero'
 import Footer from '../components/Footer'
 import HomePageEventCard from '../components/HomepageEventCard'
 import Category from '../components/Category'
+import WhyAmity from '../components/WhyAmity'
 
 const Homepage = () => {
   return (
@@ -12,6 +13,7 @@ const Homepage = () => {
       <HomepageHero/>
       <HomePageEventCard/>
       <Category/>
+      <WhyAmity/>
       <Footer/>
     </div>
   )
