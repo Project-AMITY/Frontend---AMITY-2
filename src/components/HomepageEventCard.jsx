@@ -29,7 +29,6 @@ const HomepageEventCard = () => {
   }, []);
 
   if (loading) return <div className="py-20 text-center">Loading Latest Events...</div>;
-
   return (
     <div>
       <section className="py-16 bg-white dark:bg-surface-darker/50">
@@ -61,9 +60,9 @@ const HomepageEventCard = () => {
                 className="aspect-video w-full bg-cover bg-center" 
                 style={{ backgroundImage: `url('${event.image}')` }}
               >
-                <div className="absolute top-3 right-3 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-bold px-2 py-1 rounded text-slate-900 dark:text-white shadow-sm">
+                {/* <div className="absolute top-3 right-3 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-bold px-2 py-1 rounded text-slate-900 dark:text-white shadow-sm">
                   {event.price}
-                </div>
+                </div> */}
               </div>
 
               {/* Content */}
@@ -81,7 +80,7 @@ const HomepageEventCard = () => {
 
                 {/* Footer / Join Action */}
                 <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700/50 flex items-center justify-between">
-                  <div className="flex -space-x-2">
+                  {/* <div className="flex -space-x-2">
                     {event.attendees.map((avatar, index) => (
                       <img 
                         key={index}
@@ -95,7 +94,7 @@ const HomepageEventCard = () => {
                         +{event.extraAttendees}
                       </span>
                     )}
-                  </div>
+                  </div> */}
                   <button className="text-sm font-semibold text-primary hover:text-primary-hover">
                     Join
                   </button>
