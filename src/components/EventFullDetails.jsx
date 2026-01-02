@@ -9,6 +9,8 @@ const EventFullDetail = ({ eventId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("about");
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const shareModalRef = React.useRef(null);
 
   useEffect(() => {
     // Function to fetch data from Spring Boot
@@ -39,107 +41,49 @@ const EventFullDetail = ({ eventId }) => {
 
   // Render nothing if no data found
   if (!eventData) return null;
+
+  // Map API response to component expected structure
+  const host = eventData.host || {
+    name: eventData.organizer || "Event Organizer",
+    isVerified: false,
+    avatarIcon: "people"
+  };
+
+  const highlights = eventData.highlights || (eventData.highlight ? [eventData.highlight] : []);
   
-  
-  // const eventData = {
-  //   id: 3,
-  //   title: "Global Education Fair 2024",
-  //   bannerImage:
-  //     "https://lh3.googleusercontent.com/aida-public/AB6AXuDG44ZkXrtlqv5LJsnnRi6yrhmf625xUfHzRFQ63zkHeMHndvYhPmUi6qORC2a6pAm8HQxUhbkUEFq1tGZ6blJtH9LrwL9FfPAl6vHoRGc4sEa8mpkrXTagTEyyCeked1H9GW9guO3MGzlh6MBKFADdMDtGujyxZdHFB2pR-iFkfJCQigYVFV9BxW9_Qr4UAB0u6qCKj82walFGkMXRLz9GlKCXIrfUGM7ZBbVVhjBnc-wi3IFWtf80qvotcaGlhPJMRw8BUi4-bLY",
-  //   category: "Education",
-  //   tags: ["StudyAbroad", "University", "FutureLeaders"],
-  //   description:
-  //     "Unlock your potential and explore academic opportunities from around the globe. Meet representatives from top-tier universities, attend seminar sessions on scholarship programs, and get on-the-spot profile evaluations.",
-  //   host: {
-  //     name: "Student Union",
-  //     isVerified: true,
-  //     avatarIcon: "school",
-  //   },
-  //   timeline: [
-  //     {
-  //       step: 1,
-  //       date: "Sep 15, 2024",
-  //       label: "Registration Opens",
-  //       active: true,
-  //     },
-  //     {
-  //       step: 2,
-  //       date: "Oct 20, 2024",
-  //       label: "Registration Deadline",
-  //       active: false,
-  //     },
-  //     {
-  //       step: "flag",
-  //       date: "Oct 22, 2024",
-  //       label: "Event Day",
-  //       active: false,
-  //       isFinal: true,
-  //     },
-  //   ],
-  //   pricing: "Free",
-  //   date: "Tuesday, Oct 22, 2024",
-  //   time: "10:00 AM - 5:00 PM",
-  //   location: "University Main Hall",
-  //   subLocation: "Building A, Campus Center",
-  //   highlights: [
-  //     "One-on-one interaction with university admissions officers.",
-  //     "Exclusive scholarship opportunities worth over $1M available only to attendees.",
-  //     "Visa guidance workshops conducted by immigration experts.",
-  //     "Alumni networking lounge to connect with past graduates.",
-  //   ],
-  //   similarEvents: [
-  //     {
-  //       title: "Inter-Uni Hackathon 2024",
-  //       date: "Oct 14, 2024",
-  //       host: "Tech Society",
-  //       type: "Online",
-  //       likes: 124,
-  //       img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAIVvrIJd82Fic1fEC4ayD8ftUEbV95JCCitj_0Dx5s135H6GDLjcr1dKjLRFmINSC-forPMmU1bsOA-tMWuz5ROI0yFXsuNN_ygOY-uFyI-gwDjCfK-Y6-HZSDQ4EWNVDfUWZ30uLb3fkcvfDq9PSQCu1xJ8l1DIdbPgiwaY7dAeEccTpEQlxFOKSniCTX_Zo2YWJUTY5qfz7P94z7g0JaNgc-d8Qdzc7ZRpsyhYn94nZGwVE2fhP_wASzPadqH8kBz6uKsIZndmA",
-  //     },
-  //     {
-  //       title: "Resume & LinkedIn Workshop",
-  //       date: "Oct 16, 2024",
-  //       host: "Career Center",
-  //       type: "Physical",
-  //       likes: 89,
-  //       img: "https://lh3.googleusercontent.com/aida-public/AB6AXuASPNf_hfhMzix1v_-8dxR7h9lyhjsaD_hSdmRKgneL0RoxZTMuXsn4Ua8GYaDr5k6CAyUvsbRdeOqKD2q9OfEk0lzxZIj64J7QGoMsavcUU_2BUkLsgJ9XbyeixY6nVQN4rmz29tGkB3cmsiwUjzHcr13nHzydjQAyUMxw64GC-9aq92bxYZvqoF6WVy5coT94LmvqDWH8PzNTr9lYbDHlAaEVlj3515OpfdfiXpPa6xLadTAThcnkDC_0wk8x9XloeXM9TUtd_Og",
-  //     },
-  //   ],
-  //   schedule: [
-  //   { time: "10:00 AM - 11:00 AM", activity: "Opening Ceremony and Welcome" },
-  //   { time: "11:00 AM - 1:00 PM", activity: "University Presentations" },
-  //   { time: "1:00 PM - 2:00 PM", activity: "Lunch Break" },
-  //   { time: "2:00 PM - 4:00 PM", activity: "Workshops and Seminars" },
-  //   { time: "4:00 PM - 5:00 PM", activity: "Networking Session" }
-  // ],
-  // prizes: [
-  //   "Full scholarships for top performers",
-  //   "Cash prizes for winners",
-  //   "Internship opportunities"
-  // ],
-  // faqs: [
-  //   { 
-  //     question: "How to register?", 
-  //     answer: "Click the register button above." 
-  //   },
-  //   { 
-  //     question: "Is there a fee?", 
-  //     answer: "No, the event is free." 
-  //   },
-  //   { 
-  //     question: "Who can attend?", 
-  //     answer: "Students and parents." 
-  //   }
-  // ]
-  // };
-  // const [activeTab, setActiveTab] = useState("about");
+  // Share feature download function
+  const downloadShareImage = async () => {
+    const canvas = shareModalRef.current.querySelector('.share-template');
+    if (!canvas) return;
+
+    const html2canvas = (await import('html2canvas')).default;
+    try {
+      const image = await html2canvas(canvas, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true
+      });
+      
+      const link = document.createElement('a');
+      link.href = image.toDataURL('image/jpeg', 0.95);
+      link.download = `${eventData.title.replace(/\s+/g, '-')}-share.jpg`;
+      link.click();
+    } catch (err) {
+      console.error('Error downloading image:', err);
+      alert('Error downloading image. Please try again.');
+    }
+  };
+
+  const getEventPageUrl = () => {
+    return `${window.location.origin}${window.location.pathname}?eventId=${eventId}`;
+  };
   
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased selection:bg-primary selection:text-white">
       <div className="max-w-[1280px] mx-auto px-1 md:px-4">
-        <div className="text-xs text-gray-400 mb-2">
+        {/* <div className="text-xs text-gray-400 mb-2">
            Event ID: {eventId} (Frontend Demo Mode)
-        </div>
+        </div> */}
         {/* Breadcrumbs */}
         <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-6 overflow-x-auto whitespace-nowrap">
           <a href="#" className="hover:text-primary transition-colors">
@@ -158,7 +102,7 @@ const EventFullDetail = ({ eventId }) => {
         {/* Hero Banner */}
         <div className="relative w-full aspect-[21/9] md:aspect-[21/8] lg:h-[450px] rounded-2xl overflow-hidden mb-8 shadow-xl border border-gray-200 dark:border-gray-800">
           <img
-            src={eventData.bannerImage}
+            src={eventData.image}
             alt={eventData.title}
             className="w-full h-full object-cover"
           />
@@ -168,7 +112,7 @@ const EventFullDetail = ({ eventId }) => {
               <span className="material-symbols-outlined text-[16px] mr-1.5">
                 location_on
               </span>
-              Physical Event
+              {eventData.eventType || "Physical Event"}
             </span>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {eventData.title}
@@ -183,9 +127,9 @@ const EventFullDetail = ({ eventId }) => {
             <div className="mb-8">
               <div className="flex flex-wrap gap-3 mb-4">
                 <span className="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-sm font-semibold border border-indigo-100 dark:border-indigo-800">
-                  Category: {eventData.category}
+                  Category: {eventData.category || "N/A"}
                 </span>
-                {eventData.tags.map((tag) => (
+                {eventData.tags && eventData.tags.map((tag) => (
                   <span
                     key={tag}
                     className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-surface-dark text-gray-600 dark:text-gray-400 text-sm font-medium"
@@ -195,24 +139,25 @@ const EventFullDetail = ({ eventId }) => {
                 ))}
               </div>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                {eventData.description}
+                {eventData.description || "No description available"}
               </p>
 
               {/* Host Card */}
+              {host && (
               <div className="flex items-center justify-between p-5 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-800 shadow-sm">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[28px] text-indigo-600 dark:text-indigo-400">
-                      {eventData.host.avatarIcon}
+                      {host.avatarIcon}
                     </span>
                   </div>
                   <div>
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">
-                      Hosted by
+                      Organized by
                     </p>
                     <h4 className="text-lg font-bold flex items-center gap-1">
-                      {eventData.host.name}
-                      {eventData.host.isVerified && (
+                      {host.name}
+                      {host.isVerified && (
                         <span className="material-symbols-outlined text-[18px] text-blue-500 ml-1">
                           verified
                         </span>
@@ -220,13 +165,15 @@ const EventFullDetail = ({ eventId }) => {
                     </h4>
                   </div>
                 </div>
-                <button className="px-4 py-2 text-sm font-semibold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors">
+                {/* <button className="px-4 py-2 text-sm font-semibold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors">
                   View Profile
-                </button>
+                </button> */}
               </div>
+              )}
             </div>
 
             {/* Timeline Section */}
+            {eventData.timeline && (
             <div className="mb-10 p-6 bg-white dark:bg-surface-dark rounded-2xl border border-gray-200 dark:border-gray-800">
               <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">
@@ -270,11 +217,12 @@ const EventFullDetail = ({ eventId }) => {
                 </div>
               </div>
             </div>
+            )}
 
             {/* Tabs Section */}
             <div className="mb-6 border-b border-gray-200 dark:border-gray-800">
               <div className="flex gap-8">
-                {["about", "schedule", "prizes"].map((tab) => (
+                {["about"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -293,22 +241,22 @@ const EventFullDetail = ({ eventId }) => {
             <div className="prose prose-slate dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
               {activeTab === "about" && (
                 <div className="animate-in fade-in duration-300">
-                  <p class="mb-4">
+                  {/* <p class="mb-4">
                   The <strong>Global Education Fair 2024</strong> is the premier
                   event for students aspiring to pursue higher education abroad.
                   This year, we are bringing together over 50 universities from
                   the USA, UK, Canada, Australia, and Europe under one roof.
-                </p>
+                </p> */}
                   <h4 className="font-bold text-lg mt-6 mb-3">Highlights:</h4>
                   <ul className="list-disc pl-5 space-y-2">
-                    {eventData.highlights.map((h, i) => (
+                    {highlights && highlights.map((h, i) => (
                       <li key={i}>{h}</li>
                     ))}
                   </ul>
                 </div>
-              )}
+            )} 
               {/* Schedule Tab Content */}
-              {activeTab === 'schedule' && (
+              {/* {activeTab === 'schedule' && (
                 <div className="animate-in fade-in duration-300">
                   <h4 className="text-slate-900 dark:text-white font-bold text-lg mt-6 mb-3">
                     Event Schedule
@@ -318,7 +266,7 @@ const EventFullDetail = ({ eventId }) => {
                   </p>
                   
                   <ul className="list-none pl-0 space-y-4 mb-6">
-                    {eventData.schedule.map((item, index) => (
+                    {eventData.schedule && eventData.schedule.map((item, index) => (
                       <li key={index} className="flex flex-col sm:flex-row sm:gap-4 pb-4 border-b border-gray-100 dark:border-gray-800 last:border-0">
                         <span className="text-primary font-bold whitespace-nowrap min-w-[160px]">
                           {item.time}
@@ -330,23 +278,23 @@ const EventFullDetail = ({ eventId }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
               {/* Prizes & FAQ Tab Content */}
-              {activeTab === 'prizes' && (
+              {/* {activeTab === 'prizes' && (
                 <div className="animate-in fade-in duration-300">
                   <h4 className="text-slate-900 dark:text-white font-bold text-lg mt-6 mb-3">
                     Prizes & FAQ
                   </h4>
                   <p className="mb-4">Information about prizes and frequently asked questions.</p>
 
-                  {/* Prizes Section */}
+                  
                   <div className="mb-8">
                     <h5 className="text-slate-900 dark:text-white font-bold text-base mt-6 mb-3 flex items-center gap-2">
                       <span className="material-symbols-outlined text-yellow-500">emoji_events</span>
                       Prizes:
                     </h5>
                     <ul className="list-disc pl-5 space-y-2 mb-6">
-                      {eventData.prizes.map((prize, index) => (
+                      {eventData.prizes && eventData.prizes.map((prize, index) => (
                         <li key={index} className="text-gray-700 dark:text-gray-300">
                           {prize}
                         </li>
@@ -354,14 +302,14 @@ const EventFullDetail = ({ eventId }) => {
                     </ul>
                   </div>
 
-                {/* FAQ Section */}
+                
                 <div>
                   <h5 className="text-slate-900 dark:text-white font-bold text-base mt-6 mb-3 flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary">help</span>
                     FAQ:
                   </h5>
                   <div className="space-y-4">
-                    {eventData.faqs.map((faq, index) => (
+                    {eventData.faqs && eventData.faqs.map((faq, index) => (
                       <div 
                         key={index} 
                         className="p-4 rounded-xl bg-gray-50 dark:bg-surface-darker border border-gray-100 dark:border-gray-800"
@@ -377,7 +325,7 @@ const EventFullDetail = ({ eventId }) => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
             </div>
           </div>
 
@@ -391,7 +339,7 @@ const EventFullDetail = ({ eventId }) => {
                       Entry Fee
                     </p>
                     <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-                      {eventData.pricing}
+                      {eventData.fee}
                     </h2>
                   </div>
                   <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
@@ -407,8 +355,8 @@ const EventFullDetail = ({ eventId }) => {
                       calendar_today
                     </span>
                     <div>
-                      <p className="text-sm font-bold">{eventData.date}</p>
-                      <p className="text-xs text-gray-500">{eventData.time}</p>
+                      <p className="text-sm font-bold">{eventData.eventDate}</p>
+                      <p className="text-xs text-gray-500">{eventData.eventTime}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -416,20 +364,22 @@ const EventFullDetail = ({ eventId }) => {
                       location_on
                     </span>
                     <div>
-                      <p className="text-sm font-bold">{eventData.location}</p>
-                      <p className="text-xs text-gray-500">
-                        {eventData.subLocation}
-                      </p>
+                      <p className="text-sm font-bold">{eventData.university}</p>
                     </div>
                   </div>
                 </div>
 
-                <button className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+                <a 
+                  href={eventData.meetingLink || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold shadow-lg shadow-primary/25 flex items-center justify-center gap-2 text-center no-underline"
+                >
                   Register for Event
                   <span className="material-symbols-outlined text-[18px]">
                     arrow_forward
                   </span>
-                </button>
+                </a>
                 {/* Secondary Actions Row */}
                 <div className="grid grid-cols-2 gap-3 pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
                   <button
@@ -439,6 +389,7 @@ const EventFullDetail = ({ eventId }) => {
                     Save
                   </button>
                   <button
+                    onClick={() => setShareModalOpen(true)}
                     className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-surface-darker transition-colors text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
                     <span className="material-symbols-outlined text-[18px]">share</span>
@@ -454,7 +405,7 @@ const EventFullDetail = ({ eventId }) => {
                 Need help?
               </p>
               <p className="text-sm text-blue-900 dark:text-blue-200 mb-3 leading-relaxed">
-                Contact the {eventData.host.name} for special accommodations or queries.
+                Contact the {host.name} for special accommodations or queries.
               </p>
               <a 
                 href="mailto:support@university.edu" 
@@ -467,6 +418,66 @@ const EventFullDetail = ({ eventId }) => {
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {shareModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShareModalOpen(false)}>
+          <div 
+            className="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl max-w-md w-full p-6" 
+            onClick={(e) => e.stopPropagation()}
+            ref={shareModalRef}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Share Event</h2>
+              <button 
+                onClick={() => setShareModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Share Template */}
+            <div className="share-template bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-xl p-6 mb-6 border border-primary/20">
+              <img 
+                src={eventData.image} 
+                alt={eventData.title}
+                className="w-full h-48 object-cover rounded-lg mb-4"
+              />
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                {eventData.title}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {eventData.description || "Check out this amazing event!"}
+              </p>
+              <div className="bg-white dark:bg-surface-darker rounded-lg p-3 break-all text-xs text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                {getEventPageUrl()}
+              </div>
+            </div>
+
+            {/* Download Button */}
+            <button
+              onClick={downloadShareImage}
+              className="w-full py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold mb-3 flex items-center justify-center gap-2 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              Download as JPG
+            </button>
+
+            {/* Copy Link Button */}
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(getEventPageUrl());
+                alert('Event link copied to clipboard!');
+              }}
+              className="w-full py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">content_copy</span>
+              Copy Link
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
