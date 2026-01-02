@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import ScrollReveal from "./ScrollReveal";
 
 const HomepageHero = () => {
   const logos = [
@@ -25,6 +26,7 @@ const HomepageHero = () => {
     },
   ];
   return (
+    <ScrollReveal>
     <header className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-32">
       {/* Background Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none -z-10 opacity-60"></div>
@@ -39,18 +41,22 @@ const HomepageHero = () => {
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl mb-6 leading-[1.1]">
-          Your gateway to <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-primary to-purple-500">
-            Inter-University Opportunities
-          </span>
-        </h1>
+        <ScrollReveal>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl mb-6 leading-[1.1]">
+            Your gateway to <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-primary to-purple-500">
+              Inter-University Opportunities
+            </span>
+          </h1>
+        </ScrollReveal>
 
-        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-10 leading-relaxed">
-          Amity centralises events, workshops and opportunities across
-          universities. Find your community, learn new skills, and connect — all
-          in one place.
-        </p>
+        <ScrollReveal>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-10 leading-relaxed">
+            Amity centralises events, workshops and opportunities across
+            universities. Find your community, learn new skills, and connect — all
+            in one place.
+          </p>
+        </ScrollReveal>
 
         {/* CTA Button */}
         <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
@@ -64,6 +70,7 @@ const HomepageHero = () => {
           </Link>
         </div>
       </div>
+      
 
       {/* University Logos Slider */}
       <div className="mt-20 w-full relative">
@@ -98,6 +105,7 @@ const HomepageHero = () => {
         </p>
       </div>
     </header>
+    </ScrollReveal>
   );
 };
 
