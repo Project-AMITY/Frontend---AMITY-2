@@ -68,7 +68,6 @@ const UserProfileContent = () => {
                   style={{
                     backgroundImage: `url("${profile.profileImage || 'https://via.placeholder.com/150'}")`,
                   }}
-                  aria-label={`Portrait of ${profile.name}`}
                 />
                 <button className="absolute bottom-1 right-1 bg-primary hover:bg-primary/90 text-white rounded-full p-2 border-[3px] border-[#111722] shadow-sm transition-all active:scale-90">
                   <span className="material-symbols-outlined text-[18px] leading-none">
