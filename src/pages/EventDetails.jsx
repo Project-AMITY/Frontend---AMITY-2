@@ -10,10 +10,10 @@ const EventDetails = () => {
   const { id } = useParams();
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased selection:bg-primary selection:text-white">
+    <div className="bg-background-light flex flex-col min-h-screen dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased selection:bg-primary selection:text-white">
       <Navbar />
       <main className="flex-grow pt-6 pb-20">
-        <div className="pt-20">
+        <div className="pt-20 flex-grow">
             <EventFullDetail eventId={id}/>
         </div>
       </main>
