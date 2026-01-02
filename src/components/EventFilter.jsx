@@ -15,13 +15,6 @@ const EventFilter = () => {
     { label: "Online Events", value: "online" },
     { label: "Physical Events", value: "physical" },
   ],
-  organizers: [
-    { label: "All Organizers", value: "" },
-    { label: "Tech Society", value: "tech-society" },
-    { label: "Sports Club", value: "sports-club" },
-    { label: "Career Center", value: "career-center" },
-    { label: "Student Union", value: "student-union" },
-  ],
   university: [
     { label: "All Universities", value: "" },
     { label: "University A", value: "university-a" },
@@ -43,7 +36,7 @@ const EventFilter = () => {
         </div>
 
         <div className="bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-900 p-4 md:p-10 shadow-sm mb-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* Keyword Search (remains static) */}
             <div className="relative col-span-1 md:col-span-2 lg:col-span-1">
@@ -61,7 +54,6 @@ const EventFilter = () => {
             {[
               { key: 'categories', options: FILTER_CONFIG.categories },
               { key: 'eventTypes', options: FILTER_CONFIG.eventTypes },
-              { key: 'organizers', options: FILTER_CONFIG.organizers },
               { key: 'university', options: FILTER_CONFIG.university },
             ].map((filter) => (
               <div key={filter.key} className="relative">
