@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
 
     const navLinks = [
-    { name: "Opportunities", to: "/opportunities" },
+    { name: "Opportunities", to: "/events" },
     { name: "Organisers", to: "/organisers" },
     { name: "Login", to: "/login" },
   ];
