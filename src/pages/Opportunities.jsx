@@ -1,7 +1,6 @@
 import React from "react";
-import EventCards from "../Components/EventCards";
-import EventFilter from "../Components/EventFilter";
-import EventData from "../Components/EventData";
+import EventFilter from "../components/EventFilter";
+import EventData from "../components/EventData";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
