@@ -10,7 +10,7 @@ import OrgReg from "./pages/OrgRegister";
 import UserProfile from "./pages/UserProfile";
 import OrganiserProfile from "./pages/OrgProfile";
 import CreateNewEvent from "./pages/CreateNewEvents";
-import OrgRegForm from "./components/OrgRegForm";
+
 
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
           <Route path="/user/profile" element={<UserProfile/>} />
           <Route path="/organiser/profile" element={<OrganiserProfile/>} />
           <Route path="/organiser/create" element={<CreateNewEvent/>} />
-          <Route path="/register/orgreg" element={<OrgRegForm/>} />
+          <Route path="/register/orgreg" element={<OrgReg/>} />
         </Routes>
       </div>
     </Router>
