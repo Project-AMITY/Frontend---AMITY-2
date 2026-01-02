@@ -22,7 +22,7 @@ const EventCards = () => {
         setLoading(true);
         setError(null);
 
-        const response = await axios.get("http://localhost:8080/api/events");
+        const response = await axios.get("http://localhost:8080/api/event");
 
         // *** CRITICAL DEBUGGING STEP ***
         console.log("Raw API Response Structure:", typeof response.data, response.data);
