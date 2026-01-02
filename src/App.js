@@ -6,6 +6,7 @@ import Opportunities from './pages/Opportunities'
 import Organisers from './pages/Organisers'
 import Login from './pages/Login';
 import Register from './pages/Register';
+import EventDetails from './pages/EventDetails';
 
 function App() {
   return (

@@ -1,11 +1,21 @@
-import React from 'react'
+import React from "react";
+import EventFilter from "../components/EventFilter";
+import EventData from "../components/EventData";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-const Opportunities = () => {
+
+const Oppotunities = () => {
   return (
-    <div>
-      This is opportunity page
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased selection:bg-primary selection:text-white">
+      <Navbar/>
+      <div className="pt-20">
+        <EventFilter/>
+      </div>
+      <EventData/>
+      <Footer/>
     </div>
-  )
-}
+  );
+};
 
-export default Opportunities
+export default Oppotunities;
