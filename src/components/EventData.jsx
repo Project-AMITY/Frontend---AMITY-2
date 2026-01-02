@@ -1,6 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const EventData = () => {
+
+  const navigate = useNavigate();
+  
   const EVENTS_DATA = [
     {
       id: 1,
@@ -208,6 +212,7 @@ const EventData = () => {
           {EVENTS_DATA.map((event) => (
             <article
               key={event.id}
+              onClick={() => navigate(`/event/${event.id}`)}
               className="group relative bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
             >
               {/* Image Section */}

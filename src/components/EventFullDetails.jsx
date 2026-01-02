@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
-const EventFullDetails = () => {
+const EventFullDetail = () => {
   
   const EVENT_DATA = {
-    id: "global-edu-2024",
+    id: 3,
     title: "Global Education Fair 2024",
     bannerImage:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuDG44ZkXrtlqv5LJsnnRi6yrhmf625xUfHzRFQ63zkHeMHndvYhPmUi6qORC2a6pAm8HQxUhbkUEFq1tGZ6blJtH9LrwL9FfPAl6vHoRGc4sEa8mpkrXTagTEyyCeked1H9GW9guO3MGzlh6MBKFADdMDtGujyxZdHFB2pR-iFkfJCQigYVFV9BxW9_Qr4UAB0u6qCKj82walFGkMXRLz9GlKCXIrfUGM7ZBbVVhjBnc-wi3IFWtf80qvotcaGlhPJMRw8BUi4-bLY",
@@ -416,7 +416,7 @@ const EventFullDetails = () => {
                 Contact the {EVENT_DATA.host.name} for special accommodations or queries.
               </p>
               <a 
-                href="mailto:sesanduramath@gmail.com" 
+                href="mailto:support@university.edu" 
                 className="text-sm font-semibold text-primary hover:underline flex items-center gap-1"
               >
                 Contact Organizer
@@ -430,4 +430,4 @@ const EventFullDetails = () => {
   );
 };
 
-export default EventFullDetails;
+export default EventFullDetail;
