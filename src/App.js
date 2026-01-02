@@ -10,6 +10,7 @@ import OrgReg from "./pages/OrgRegister";
 import UserProfile from "./pages/UserProfile";
 import OrganiserProfile from "./pages/OrgProfile";
 import CreateNewEvent from "./pages/CreateNewEvents";
+import DeveloperTeam from "./pages/DeveloperTeam";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/user/profile" element={<UserProfile/>} />
           <Route path="/organiser/profile" element={<OrganiserProfile/>} />
           <Route path="/organiser/create" element={<CreateNewEvent/>} />
+          <Route path="/developerteam" element={<DeveloperTeam/>} />
         </Routes>
       </div>
     </Router>
