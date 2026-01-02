@@ -18,7 +18,7 @@ const EventFullDetail = ({ eventId }) => {
       try {
         setLoading(true);
         // Replace with your actual Azure or Localhost API endpoint
-        const response = await axios.get(`http://localhost:8080/api/events/${eventId}`);
+        const response = await axios.get(`http://localhost:8080/api/event/${eventId}`);
         setEventData(response.data);
         setLoading(false);
       } catch (err) {
@@ -370,7 +370,7 @@ const EventFullDetail = ({ eventId }) => {
                 </div>
 
                 <a 
-                  href={eventData.meetingLink || "#"} 
+                  href={eventData.contactlink || "#"} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold shadow-lg shadow-primary/25 flex items-center justify-center gap-2 text-center no-underline"
