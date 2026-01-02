@@ -135,7 +135,7 @@ const EventCards = () => {
           {events.map((event) => (
             <article
               key={event.id}
-              onClick={() => navigate(`/events/${event.id}`)}
+              onClick={() => navigate(`/event/${event.id}`)}
               className="group relative bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full cursor-pointer"
             >
               {/* Image Section */}
