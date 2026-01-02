@@ -26,7 +26,7 @@ const JoinOrganiser = () => {
             </div>
 
             <div className="flex-shrink-0">
-              <Link to="/organisers/login"
+              <Link to="/register/orgreg"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:translate-y-[-2px] hover:bg-primary-hover active:translate-y-[0px]"
               >
                 <span className="material-symbols-outlined">person_add</span>

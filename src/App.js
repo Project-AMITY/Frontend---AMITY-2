@@ -7,6 +7,7 @@ import Organisers from './pages/Organisers'
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EventDetails from './pages/EventDetails';
+import OrgRegister from './pages/OrgRegister';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/organisers' element={<Organisers/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/register'element={<Register/>}/>
+          <Route path='/register/orgreg'element={<OrgRegister/>}/>
         </Routes>
       </div>
     </Router>
