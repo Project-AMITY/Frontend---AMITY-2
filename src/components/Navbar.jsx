@@ -1,12 +1,30 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const navLinks = [
-    { name: "Opportunities", to: "/events" },
+  const checkAuth = () => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    navigate('/');
+  };
+
+  // This array is for links that ALWAYS show up.
+  const navLinks = [
+    { name: "Opportunities", to: "/opportunities" },
     { name: "Organisers", to: "/organisers" },
-    { name: "Login", to: "/login" },
   ];
 
   return (
@@ -14,7 +32,6 @@ const Navbar = () => {
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 py-3">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           
-          {/* Logo & Brand */}
           <Link className="flex items-center gap-3 group" to="/">
             <div className="size-8 bg-gradient-to-br from-primary to-blue-400 rounded-lg flex items-center justify-center text-white shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
               <span className="material-symbols-outlined text-[20px]">handshake</span>
@@ -22,7 +39,6 @@ const Navbar = () => {
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Amity</span>
           </Link>
 
-          {/* Search Bar (Centered) */}
           <div className="flex-1 max-w-md w-full px-2">
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -33,13 +49,9 @@ const Navbar = () => {
                 placeholder="Search events, workshops..." 
                 type="text"
               />
-              <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                <span className="text-xs text-gray-400 border border-gray-600 rounded px-1.5 py-0.5 hidden sm:block">⌘K</span>
-              </div>
             </div>
           </div>
 
-          {/* Navigation Links & CTA */}
           <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-center md:justify-end">
             {navLinks.map((link, index) => (
               <Link 
@@ -50,17 +62,49 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link 
-  to="/register"
-  className="flex items-center justify-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-lg shadow-lg shadow-primary/25 transition-all hover:translate-y-[-1px] active:translate-y-[0px]" 
->
-  Register
-</Link>
+            
+            {/* 2. THE CONDITIONAL SECTION HANDLES LOGIN/REGISTER OR PROFILE */}
+            {isLoggedIn ? (
+              <div className="flex items-center gap-4 border-l border-gray-200 dark:border-gray-700 pl-4">
+                <button className="text-gray-500 hover:text-primary transition-colors relative">
+                  <span className="material-symbols-outlined">notifications</span>
+                  <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full border border-white"></span>
+                </button>
+                
+                <Link to="/profile" className="flex items-center gap-2 group">
+                  <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                    <span className="material-symbols-outlined text-[20px]">person</span>
+                  </div>
+                </Link>
+
+                <button 
+                  onClick={handleLogout}
+                  className="text-xs font-bold text-red-500 hover:text-red-600 uppercase tracking-tighter"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Link 
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" 
+                  to="/login"
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/register"
+                  className="flex items-center justify-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-lg shadow-lg shadow-primary/25 transition-all hover:translate-y-[-1px]" 
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
