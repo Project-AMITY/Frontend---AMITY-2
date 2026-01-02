@@ -71,7 +71,7 @@ const Navbar = () => {
                   <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full border border-white"></span>
                 </button>
                 
-                <Link to="/profile" className="flex items-center gap-2 group">
+                <Link to="/user/profile" className="flex items-center gap-2 group">
                   <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <span className="material-symbols-outlined text-[20px]">person</span>
                   </div>
