@@ -1,4 +1,5 @@
 import React from 'react'
+import ScrollReveal from './ScrollReveal';
 
 const Category = () => {
     const categories = [
@@ -62,10 +63,12 @@ const Category = () => {
     <div>
       <section className="py-16">
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+          <ScrollReveal>
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
             Explore by Category
           </h2>
-
+          </ScrollReveal>
+          <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((cat, index) => (
               <a
@@ -86,6 +89,7 @@ const Category = () => {
               </a>
             ))}
           </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
