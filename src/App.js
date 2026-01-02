@@ -10,6 +10,7 @@ import EventDetails from './pages/EventDetails';
 
 
 import OrgProfile from './pages/OrgProfile';
+import OrgRegister from './pages/OrgRegister';
 
 
 function App() {
