@@ -11,6 +11,8 @@ import UserProfile from "./pages/UserProfile";
 import OrganiserProfile from "./pages/OrgProfile";
 import CreateNewEvents from "./pages/CreateNewEvents";
 import NewEventForm from "./components/NewEventForm";
+import DeveloperTeam from "./pages/DeveloperTeam";
+
 
 
 
@@ -31,6 +33,7 @@ function App() {
           <Route path="/organiser/profile" element={<OrganiserProfile/>} />
           <Route path="/organiser/create" element={<CreateNewEvents/>} />
           <Route path="/register/orgreg" element={<OrgReg/>} />
+          <Route path="/developerteam" element={<DeveloperTeam/>} />
         </Routes>
       </div>
     </Router>
