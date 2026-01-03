@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate, Link } from "react-router-dom"; // Import Link for navigation
 import SavedEventsGrid from "./SavedEventsGrid";
 
 const UserProfileContent = () => {
@@ -19,24 +19,25 @@ const UserProfileContent = () => {
         { id: "upcoming", label: "Upcoming" },
         { id: "past", label: "Past" },
     ];
+    
+    // Authorization Check: Determines if the 'Create Event' button should be shown.
+    // Updated logic: Only ADMIN or SUPER_ADMIN roles are allowed to create events.
+    // The previous 'ORGANISER' role is now excluded (implicitly treated like a regular USER).
+    const isEventCreator = profile && (
+        profile.role === 'ADMIN' || 
+        profile.role === 'SUPER_ADMIN'
+    );
+
 
     // --- API FETCHING ---
     useEffect(() => {
         const fetchUserProfile = async () => {
-            
-            // ----------------------------------------------------
-            // FIX 1: CORRECTLY RETRIEVE THE JWT TOKEN
-            // ----------------------------------------------------
             const token = localStorage.getItem('jwtToken'); // Correct key
             
-            // ----------------------------------------------------
-            // FIX 2: HANDLE MISSING TOKEN GRACEFULLY (Redirect)
-            // ----------------------------------------------------
             if (!token) {
                 console.error("No JWT token found. Redirecting to login.");
                 setError("Session expired or authentication required. Please log in.");
                 setLoading(false);
-                // Redirect user to the login page if not authenticated
                 navigate("/login"); 
                 return;
             }
@@ -44,10 +45,11 @@ const UserProfileContent = () => {
             try {
                 setLoading(true);
 
-                // Replace with your actual Spring Boot endpoint
+                // Assuming the backend returns the user profile WITH the role:
+                // Example response.data: { id: 1, first_name: '...', role: 'ADMIN', ... }
                 const response = await axios.get("http://localhost:8080/api/user/profile", {
                     headers: { 
-                        Authorization: `Bearer ${token}` // Correct format
+                        Authorization: `Bearer ${token}` 
                     }
                 });
 
@@ -56,10 +58,9 @@ const UserProfileContent = () => {
             } catch (err) {
                 console.error("Error fetching profile:", err);
                 
-                // Handle 401/403 errors explicitly
                 if (err.response?.status === 401 || err.response?.status === 403) {
                     setError("Unauthorized access or token expired. Please log in again.");
-                    localStorage.removeItem('jwtToken'); // Clear bad token
+                    localStorage.removeItem('jwtToken'); 
                     localStorage.removeItem('user');
                     navigate("/login"); 
                 } else {
@@ -70,21 +71,24 @@ const UserProfileContent = () => {
         };
 
         fetchUserProfile();
-    }, [navigate]); // navigate is a dependency of the effect
+    }, [navigate]);
 
     // --- RENDER STATES ---
     if (loading) return <div className="pt-32 text-center text-white">Loading Profile...</div>;
-    // The component will not render the error screen if it redirects above, 
-    // but keep this for non-auth errors.
     if (error && !profile) return <div className="pt-32 text-center text-red-500">{error}</div>;
+
+    // Ensure profile exists before accessing its properties
+    if (!profile) return null;
 
 
     return (
         <div>
             <main className="flex-1 w-full max-w-[1280px] mx-auto px-4 pt-20 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
                     {/* Left Column - Profile Info */}
                     <div className="lg:col-span-4 xl:col-span-3 w-full space-y-6">
+                        
                         {/* Profile Card */}
                         <div className="flex flex-col items-center bg-surface-dark rounded-xl p-8 border border-[#324467] shadow-xl relative overflow-hidden">
                             {/* Background Decoration */}
@@ -111,8 +115,15 @@ const UserProfileContent = () => {
                                     {profile.first_name} {profile.last_name}
                                 </h1>
                                 <p className="text-primary font-medium text-sm mb-6">
-                                    {/* Major can be added to DB later, using university for now */}
-                                    Student at {profile.university}
+                                    {/* Display role if it exists, otherwise default university info */}
+                                    {profile.role ? (
+                                        // Highlight the current role for visibility
+                                        <span className="text-sm font-semibold uppercase tracking-wider">
+                                            Role: {profile.role} 
+                                        </span>
+                                    ) : (
+                                        `Student at ${profile.university}`
+                                    )}
                                 </p>
                             </div>
 
@@ -133,12 +144,22 @@ const UserProfileContent = () => {
                                     </div>
                                 </div>
                             </div>
-                            
-                            {/* Removed commented CTA button for cleaner code */}
+
+                            {/* CONDITIONAL: CREATE EVENT BUTTON (Only for ADMIN/SUPER_ADMIN) */}
+                            {isEventCreator && (
+                                <Link
+                                    to="/organiser/create"
+                                    className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 group z-10"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">
+                                        add_box
+                                    </span>
+                                    <span>Create New Event</span>
+                                </Link>
+                            )}
 
                         </div>
-
-                        {/* Stats Card - Left commented out as per original code */}
+                        
                     </div>
 
                     {/* Right Column - Saved Events Content */}
@@ -178,7 +199,6 @@ const UserProfileContent = () => {
 
                         <SavedEventsGrid/>
                         
-                        {/* Removed commented SavedEventsGrid Placeholder data for cleaner code */}
                     </div>
                 </div>
             </main>
