@@ -151,18 +151,31 @@ const NewEventForm = () => {
                 type="text"
               />
               <div className="col-span-2 pt-4">
-              <label className="block text-sm font-medium text-white mb-2">
-                Contact Us
-              </label>
-              <input
-                name="contactLink"
-                value={formData.title}
-                onChange={handleChange}
-                className="block w-full rounded-lg border-0 bg-[#111722] py-2.5 px-4 text-white ring-1 ring-[#324467] focus:ring-2 focus:ring-primary outline-none"
-                placeholder="Put your contact link"
-                type="text"
-              />
-            </div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Contact Us
+                </label>
+                <input
+                  name="contactLink"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className="block w-full rounded-lg border-0 bg-[#111722] py-2.5 px-4 text-white ring-1 ring-[#324467] focus:ring-2 focus:ring-primary outline-none"
+                  placeholder="Put your contact link"
+                  type="text"
+                />
+              </div>
+              <div className="col-span-2 pt-4">
+                <label className="block text-sm font-medium text-white mb-2">
+                  Entry Fee
+                </label>
+                <input
+                  name="fee"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className="block w-full rounded-lg border-0 bg-[#111722] py-2.5 px-4 text-white ring-1 ring-[#324467] focus:ring-2 focus:ring-primary outline-none"
+                  placeholder="RS."
+                  type="text"
+                />
+              </div>
             </div>
           </div>
         </div>
