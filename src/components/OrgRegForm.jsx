@@ -1,215 +1,254 @@
-import React from 'react'
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+// --- Helper function to retrieve the JWT ---
+const getAuthToken = () => {
+    // Retrieve the token saved during the login process (must match the key used in Login.jsx)
+    return localStorage.getItem('jwtToken'); 
+};
 
 const OrgRegForm = () => {
-    const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    designation: '',
-    university: '',
-    email: '',
-    nic: '',
-    gender: '',
-    phone: ''
-  });
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value, // Matches the 'id' attribute of the input to the key in formData
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Sending data to API:", formData);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     
-    /* Example API Call:
-    try {
-      const response = await fetch('YOUR_API_URL/organisers/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const result = await response.json();
-      // handle success
-    } catch (error) {
-      // handle error
-    }
-    */
-  };
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        designation: '',
+        university: '',
+        email: '',
+        nic: '',
+        phone: '',
+        approval: '' // Matches the id="phone" in the input field
+    });
 
+    // *** DISABLED: State for the selected file is commented out ***
+    // const [selectedFile, setSelectedFile] = useState(null);
 
-  return (
-    <div>
-      <div className="bg-white dark:bg-surface-dark rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
-      <div className="p-8 md:p-10">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          
-          {/* Row 1: Names */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="firstName"> First Name </label>
-              <input 
-                id="firstName"
-                type="text" 
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="John"
-                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-slate-900 dark:text-white"
-              />
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [id]: value, 
+        }));
+    };
+
+    // *** DISABLED: Handler for file change is commented out ***
+    // const handleFileChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         setSelectedFile(file);
+    //     }
+    // };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        // 1. Check for the JWT
+        const token = getAuthToken(); 
+        if (!token) {
+            alert("Authentication required. Please log in to submit a request.");
+            setLoading(false);
+            navigate("/login"); 
+            return;
+        }
+
+        // 2. Create the DTO object with keys matching your Spring Boot backend (snake_case)
+        const adminRequestDto = {
+            // Mapped from React's camelCase state to backend's snake_case DTO
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            designation: formData.designation,
+            university: formData.university,
+            email: formData.email,
+            nic: formData.nic,
+            phone_number: formData.phone,
+            approval: formData.approval // Use phone_number as expected by backend
+        };
+
+        // *** FIX: Changed to send pure JSON data ***
+        // Send the JSON object directly to Axios. Axios will automatically use 
+        // Content-Type: application/json. This removes the need for FormData/file headers.
+        const dataToSend = adminRequestDto;
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/admin-requests', 
+                dataToSend, // Sending JSON object
+                {
+                    headers: {
+                        // We only need the Authorization header now
+                        'Authorization': `Bearer ${token}` 
+                    },
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                alert("Registration Request Sent Successfully! Awaiting Admin approval.");
+                navigate("/organiser/profile");
+            }
+        } catch (error) {
+            console.error("Registration Error:", error);
+            
+            // Handle server error responses
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                alert("Authentication failed or session expired. Please log in again.");
+                localStorage.removeItem('jwtToken');
+                navigate("/login"); 
+            } else {
+                // Display specific error message from the backend if available
+                alert(error.response?.data?.message || `Error ${error.response?.status || ''}: Failed to submit request. Check server logs.`);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="bg-white dark:bg-surface-dark rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
+            <div className="p-8 md:p-10">
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="firstName"> First Name </label>
+                            <input 
+                                id="firstName"
+                                type="text" 
+                                required
+                                value={formData.firstName} 
+                                onChange={handleChange}
+                                placeholder="John"
+                                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl outline-none text-slate-900 dark:text-white"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="lastName"> Last Name </label>
+                            <input 
+                                id="lastName"
+                                type="text" 
+                                required
+                                value={formData.lastName} 
+                                onChange={handleChange}
+                                placeholder="Doe"
+                                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl outline-none text-slate-900 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="designation"> Designation </label>
+                            <input 
+                                id="designation"
+                                type="text"
+                                required
+                                value={formData.designation}
+                                onChange={handleChange}
+                                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="university"> University </label>
+                            <input 
+                                id="university"
+                                type="text"
+                                required
+                                value={formData.university}
+                                onChange={handleChange}
+                                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="email"> Email Address </label>
+                        <input 
+                            id="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6">
+                        <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="nic"> NIC </label>
+                            <input 
+                                id="nic"
+                                type="text"
+                                required
+                                value={formData.nic}
+                                onChange={handleChange}
+                                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="phone"> Phone Number </label>
+                        <input 
+                            id="phone"
+                            type="tel"
+                            required
+                            value={formData.phone} 
+                            onChange={handleChange}
+                            className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="approval"> Add University Approval Letter </label>
+                        <input 
+                            id="approval"
+                            type="tel"
+                            required
+                            value={formData.approval} 
+                            onChange={handleChange}
+                            className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl text-slate-900 dark:text-white"
+                        />
+                    </div>
+
+                    {/* File Upload Section - COMMENTED OUT/DISABLED */}
+                    {/* <div className="bg-gray-50 dark:bg-surface-darker rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 className="text-sm font-bold text-slate-700 dark:text-gray-300 mb-4">University Verification Letter</h3>
+                        <div className="w-full flex justify-center rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 px-6 py-8 hover:bg-primary/5 transition-all cursor-pointer relative">
+                            <div className="text-center">
+                                <label className="cursor-pointer font-semibold text-primary">
+                                    <span>Upload confirmation letter</span>
+                                    <input 
+                                        id="verificationFile"
+                                        type="file" 
+                                        className="sr-only" 
+                                        accept=".pdf,.jpg,.jpeg,.png"
+                                    />
+                                </label>
+                                <p className="text-xs text-gray-500">
+                                    PDF, PNG, JPG up to 10MB
+                                </p>
+                            </div>
+                        </div>
+                    </div> 
+                    */}
+
+                    <div className="pt-4">
+                        <button 
+                            type="submit"
+                            disabled={loading}
+                            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary hover:bg-primary-hover text-white font-bold text-lg rounded-xl shadow-lg transition-all disabled:opacity-50"
+                        >
+                            <span className="material-symbols-outlined">how_to_reg</span> 
+                            {loading ? "Processing..." : "Join Now"}
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="lastName"> Last Name </label>
-              <input 
-                id="lastName"
-                type="text" 
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Doe"
-                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
+        </div>
+    );
+};
 
-          {/* Row 2: Designation & University */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="designation"> Designation </label>
-              <input 
-                id="designation"
-                type="text"
-                required
-                value={formData.designation}
-                onChange={handleChange}
-                placeholder="e.g. Club President"
-                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none text-slate-900 dark:text-white"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="university"> University </label>
-              <div className="relative">
-                <select 
-                  id="university"
-                  required
-                  value={formData.university}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer text-slate-900 dark:text-white"
-                >
-                  <option value="" disabled>Select University</option>
-                  <option value="uva">Uva Wellassa University</option>
-                  <option value="colombo">University of Colombo</option>
-                  <option value="kelaniya">University of Kelaniya</option>
-                  <option value="moratuwa">University of Moratuwa</option>
-                  <option value="nsbm">NSBM Green University</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
-                  <span className="material-symbols-outlined">expand_more</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Email Row */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="email"> Email Address </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                <span className="material-symbols-outlined text-[20px]">mail</span>
-              </div>
-              <input 
-                id="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="block w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          {/* Row 3: NIC & Gender */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="nic"> NIC </label>
-              <input 
-                id="nic"
-                type="text"
-                required
-                value={formData.nic}
-                onChange={handleChange}
-                placeholder="National Identity Card No"
-                className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none text-slate-900 dark:text-white"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="gender"> Gender </label>
-              <div className="relative">
-                <select 
-                  id="gender"
-                  required
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 appearance-none cursor-pointer text-slate-900 dark:text-white"
-                >
-                  <option value="" disabled>Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
-                  <span className="material-symbols-outlined">expand_more</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Phone Number Row */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-gray-300" htmlFor="phone"> Phone Number </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                <span className="material-symbols-outlined text-[20px]">call</span>
-              </div>
-              <input 
-                id="phone"
-                type="tel"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="+94 7X XXX XXXX"
-                className="block w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-surface-darker border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-primary/50 outline-none text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="pt-4">
-            <Link to="/organiser/profile">
-            <button 
-              type="submit"
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary hover:bg-primary-hover text-white font-bold text-lg rounded-xl shadow-lg shadow-primary/25 transition-all hover:translate-y-[-2px] active:translate-y-[0px] focus:ring-4 focus:ring-primary/30 outline-none"
-            >
-              <span className="material-symbols-outlined">how_to_reg</span> 
-              Join Now 
-            </button>
-            </Link>
-          </div>
-
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4"> 
-            Already have an account? <a className="text-primary hover:text-primary-hover font-semibold transition-colors" href="#">Log in</a>
-          </p>
-        </form>
-      </div>
-      <div className="h-2 w-full bg-gradient-to-r from-blue-400 via-primary to-blue-600"></div>
-    </div>
-    </div>
-  )
-}
-
-export default OrgRegForm
+export default OrgRegForm;
