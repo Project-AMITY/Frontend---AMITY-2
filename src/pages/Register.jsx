@@ -83,7 +83,7 @@ const RegForm = () => {
         </div>
 
         {/* Right Form Section */}
-        <div className="flex-1 flex flex-col justify-center items-center p-8 sm:p-16 lg:p-32 bg-background-light dark:bg-background-dark">
+        <div className="flex-1 flex flex-col justify-center items-center p-8 sm:p-16 lg:p-16 lg:pt-24 bg-background-light dark:bg-background-dark">
           <div className="w-full max-w-md">
             <h2 className="text-4xl font-bold mb-2 text-center">Create Account</h2>
             <p className="text-slate-500 dark:text-slate-400 text-center mb-8">
@@ -104,6 +104,7 @@ const RegForm = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}
+              <div className='flex flex-row justify-between'>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   First Name
@@ -132,6 +133,7 @@ const RegForm = () => {
                   className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
                   placeholder="Doe"
                 />
+              </div>
               </div>
 
               {/* Test University */}
@@ -167,6 +169,7 @@ const RegForm = () => {
               </div>
 
               {/* Password */}
+              <div className='flex flex-row justify-between'>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Password
@@ -196,6 +199,7 @@ const RegForm = () => {
                   className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
                   placeholder="••••••••"
                 />
+              </div>
               </div>
 
              {/* test add subscribe or not */}    {/* add corect subscribe tick and description */}

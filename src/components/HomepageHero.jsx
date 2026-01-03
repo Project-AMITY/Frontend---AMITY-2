@@ -1,30 +1,31 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import ScrollReveal from "./ScrollReveal";
+import UniversityIcon from "../assets/UniversityIcon.png"
 
 const HomepageHero = () => {
   const logos = [
-  { 
-    id: "A", 
-    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-1.png" 
-  },
-  { 
-    id: "B", 
-    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-2.png" 
-  },
-  { 
-    id: "C", 
-    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-3.png" 
-  },
-  { 
-    id: "D", 
-    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-4.png" 
-  },
-  { 
-    id: "E", 
-    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-5.png" 
-  },
-];
+    {
+      id: "A",
+      src: UniversityIcon,
+    },
+    {
+      id: "B",
+      src: UniversityIcon,
+    },
+    {
+      id: "C",
+      src: UniversityIcon,
+    },
+    {
+      id: "D",
+      src: UniversityIcon,
+    },
+    {
+      id: "E",
+      src: UniversityIcon,
+    },
+  ];
   return (
     <ScrollReveal>
     <header className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-32">
@@ -73,24 +74,10 @@ const HomepageHero = () => {
       
 
       {/* University Logos Slider */}
-      <div className="mt-20 w-full relative">
+      <div className="mt-20  w-full relative">
         <div className="overflow-hidden flex gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-          <div className="flex items-center justify-around w-full min-w-max animate-scroll gap-12 animate-scroll">
-            {logos.map((logo) => (
-              <img
-                key={logo.id}
-                alt={`University Logo ${logo.id}`}
-                className="h-10 md:h-12 object-contain"
-                src={logo.src}
-              />
-            ))}
-            {/* Repeat logos if needed for infinite scroll effect */}
-          </div>
-          <div
-            className="flex items-center justify-around w-full min-w-max animate-scroll gap-12 animate-scroll"
-            aria-hidden="true"
-          >
-            {logos.map((logo) => (
+          <div className="flex items-center justify-around w-full min-w-max  gap-12  animate-marquee">
+            {[...logos,...logos].map((logo) => (
               <img
                 key={logo.id}
                 alt={`University Logo ${logo.id}`}

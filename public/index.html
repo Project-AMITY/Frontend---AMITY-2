@@ -39,6 +39,15 @@
         darkMode: "media",
         theme: {
           extend: {
+            keyframe: {
+              marquee: {
+                '0%':{transform :'translateX(0)'},
+                '100%':{transform :'translateX(50px)'},
+              },
+            },
+            animation : {
+              marquee :'marquee 3s linear infinite',   
+            },
             colors: {
               primary: "#2b6cee",
               "primary-hover": "#2256bf",
