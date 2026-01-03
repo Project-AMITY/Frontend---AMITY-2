@@ -14,7 +14,7 @@ const RegHero = () => {
     ],
   };
   return (
-    <div className="ml-16">
+    <div className="m-auto">
       <div>
         {/* Background Image Layer with Overlay */}
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">

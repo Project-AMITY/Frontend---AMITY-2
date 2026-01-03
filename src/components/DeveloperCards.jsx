@@ -23,7 +23,7 @@ const DeveloperCards = () => {
   },
   {
     id: 3,
-    name: "Thinuka",
+    name: "Thinuka Vinjaya",
     role: "Backend Developer",
     designation: " Member of MS club UWU ",
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDkbvBEQp2Y-wIo0RnVqpRqvvm10P4q8igfIKXxOWFZpSplz7-fCcl3VixMK6hnb4DYvZkyeoVMYshrBxGbCLo35ZqxikdlSVuT7ple6cZdx1d8RC-lPO4Op9vEvhuwDdLcuwvJ9uUNYz_N51AGcmE7XsjIX-kc4Uyl__t6eI-hVUibiZVDN-3GJFA5aRpH_BKDHdCorlInzYyM32yBF3d2nUvq3y0Zd7QedY70DgH7ptf7V47AhAAvq2kGsXRl0FovVh3xOHG_aAo",
@@ -46,7 +46,7 @@ const DeveloperCards = () => {
       {ORGANIZERS.map((organizer) => (
         <div 
           key={organizer.id} 
-          className="group bg-white dark:bg-surface-dark rounded-xl p-6 border border-gray-200 dark:border-gray-800 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col items-center text-center relative overflow-hidden"
+          className="group bg-white dark:bg-surface-dark rounded-xl p-8 border border-gray-200 dark:border-gray-800 hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 flex flex-col items-center text-center relative overflow-hidden"
         >
           {/* Animated Top Border */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
