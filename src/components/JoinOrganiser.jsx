@@ -25,13 +25,13 @@ const JoinOrganiser = () => {
               </div>
 
               <div className="flex-shrink-0">
-                <a
-                  href="mailto:support@amity.edu?subject=Organiser%20Partnership%20Inquiry&body=Hello%20Amity%20Team%2C%0A%0AI%20am%20interested%20in%20connecting%20as%20an%20organiser."
+                <Link
+                  to="/organisers/login"
                   className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:translate-y-[-2px] hover:bg-primary-hover active:translate-y-[0px]"
                 >
-                  <span className="material-symbols-outlined">mail</span>
-                  Connect with Us
-                </a>
+                  <span className="material-symbols-outlined">person_add</span>
+                  Join as Organiser
+                </Link>
               </div>
             </div>
           </div>
