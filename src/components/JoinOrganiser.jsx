@@ -35,6 +35,15 @@ const JoinOrganiser = () => {
               </div>
             </div>
           </div>
+          <div className="flex flex-col items-center justify-center p-6 text-center">
+            <div className="text-red-600 dark:text-red-500 font-bold text-lg animate-pulse">
+              Send us University approved letter to publish events.
+            </div>
+            <p className="text-gray-500 text-sm mt-2 italic">
+              * This is required for manual verification of your organizer
+              status.
+            </p>
+          </div>
         </div>
       </main>
       <div className="max-w-[1280px] mx-auto px-4 md:px-8">
@@ -48,9 +57,7 @@ const JoinOrganiser = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            
-          </div>
+          <div className="flex flex-wrap items-center gap-3"></div>
         </div>
       </div>
     </div>

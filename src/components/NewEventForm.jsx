@@ -115,7 +115,7 @@ const [formData, setFormData] = useState(INITIAL_EVENT_DATA);
       </div>
 
       {/* SECTION: Agenda (Dynamic) */}
-      <div className="bg-surface-dark rounded-xl p-8 border border-[#324467] space-y-6">
+      {/* <div className="bg-surface-dark rounded-xl p-8 border border-[#324467] space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-[#324467]">
           <h3 className="text-lg font-bold text-white">Schedule / Agenda</h3>
           <button 
@@ -148,7 +148,7 @@ const [formData, setFormData] = useState(INITIAL_EVENT_DATA);
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Footer Buttons */}
       <div className="flex items-center justify-end gap-4 pt-6 border-t border-[#324467]">

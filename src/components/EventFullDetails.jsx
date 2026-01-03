@@ -181,7 +181,7 @@ const EventFullDetail = ({ eventId }) => {
                 </span>{" "}
                 Event Timeline
               </h3>
-              <div className="relative px-4">
+              {/* <div className="relative px-4">
                 <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 hidden md:block"></div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
                   {eventData.timeline.map((item, idx) => (
@@ -215,7 +215,7 @@ const EventFullDetail = ({ eventId }) => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
             )}
 
