@@ -8,11 +8,11 @@ const Navbar = () => {
   const location = useLocation();
 
   const checkAuth = () => {
-    const token = localStorage.getItem('JWTtoken');
+    const token = localStorage.getItem('jwtToken');
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser(decoded); // Store decoded token (contains role, sub, etc.)
+        setUser(decoded); 
       } catch (error) {
         console.error("Invalid token:", error);
         handleLogout();
@@ -27,7 +27,7 @@ const Navbar = () => {
   }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwtToken');
     setUser(null);
     navigate('/');
   };
