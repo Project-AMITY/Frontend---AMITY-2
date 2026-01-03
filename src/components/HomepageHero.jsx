@@ -4,27 +4,27 @@ import ScrollReveal from "./ScrollReveal";
 
 const HomepageHero = () => {
   const logos = [
-    {
-      id: "A",
-      src: "https://img.icons8.com/external-flat-round-flat-icons/100/external-university-university-flat-round-flat-icons-4.png",
-    },
-    {
-      id: "B",
-      src: "https://img.icons8.com/external-flat-round-flat-icons/100/external-university-university-flat-round-flat-icons-2.png",
-    },
-    {
-      id: "C",
-      src: "https://img.icons8.com/external-flat-round-flat-icons/100/external-university-university-flat-round-flat-icons-5.png",
-    },
-    {
-      id: "D",
-      src: "https://img.icons8.com/external-flat-round-flat-icons/100/external-university-university-flat-round-flat-icons-3.png",
-    },
-    {
-      id: "E",
-      src: "https://img.icons8.com/external-flat-round-flat-icons/100/external-university-university-flat-round-flat-icons-1.png",
-    },
-  ];
+  { 
+    id: "A", 
+    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-1.png" 
+  },
+  { 
+    id: "B", 
+    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-2.png" 
+  },
+  { 
+    id: "C", 
+    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-3.png" 
+  },
+  { 
+    id: "D", 
+    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-4.png" 
+  },
+  { 
+    id: "E", 
+    src: "https://res.cloudinary.com/dqr689650/image/upload/v1/assets/uni-5.png" 
+  },
+];
   return (
     <ScrollReveal>
     <header className="relative overflow-hidden pt-16 pb-20 md:pt-24 md:pb-32">

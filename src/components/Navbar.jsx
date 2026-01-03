@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Import the decoder
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   const checkAuth = () => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded); // Store decoded token (contains role, sub, etc.)
+      } catch (error) {
+        console.error("Invalid token:", error);
+        handleLogout();
+      }
+    } else {
+      setUser(null);
+    }
   };
 
   useEffect(() => {
@@ -17,11 +28,10 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setIsLoggedIn(false);
+    setUser(null);
     navigate('/');
   };
 
-  // This array is for links that ALWAYS show up.
   const navLinks = [
     { name: "Opportunities", to: "/opportunities" },
     { name: "Organisers", to: "/organisers" },
@@ -39,6 +49,7 @@ const Navbar = () => {
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Amity</span>
           </Link>
 
+          {/* Search Bar */}
           <div className="flex-1 max-w-md w-full px-2">
             <div className="relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -46,7 +57,7 @@ const Navbar = () => {
               </div>
               <input 
                 className="block w-full pl-10 pr-3 py-2 bg-gray-100 dark:bg-surface-dark border-transparent focus:border-primary focus:bg-white dark:focus:bg-surface-darker focus:ring-2 focus:ring-primary/50 rounded-lg text-sm transition-all duration-200" 
-                placeholder="Search events, workshops..." 
+                placeholder="Search events..." 
                 type="text"
               />
             </div>
@@ -63,18 +74,25 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* 2. THE CONDITIONAL SECTION HANDLES LOGIN/REGISTER OR PROFILE */}
-            {isLoggedIn ? (
+            {/* JWT-BASED CONDITIONAL RENDERING */}
+            {user ? (
               <div className="flex items-center gap-4 border-l border-gray-200 dark:border-gray-700 pl-4">
                 <button className="text-gray-500 hover:text-primary transition-colors relative">
                   <span className="material-symbols-outlined">notifications</span>
                   <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full border border-white"></span>
                 </button>
                 
-                <Link to="/user/profile" className="flex items-center gap-2 group">
+                {/* DYNAMIC PROFILE ROUTING */}
+                <Link 
+                  to={user.role === "ROLE_ORGANIZER" ? "/organiser/profile" : "/user/profile"} 
+                  className="flex items-center gap-2 group"
+                >
                   <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                     <span className="material-symbols-outlined text-[20px]">person</span>
                   </div>
+                  <span className="hidden lg:block text-xs font-semibold text-gray-400">
+                    {user.sub || "Profile"}
+                  </span>
                 </Link>
 
                 <button 
@@ -86,15 +104,12 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link 
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" 
-                  to="/login"
-                >
+                <Link className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" to="/login">
                   Login
                 </Link>
                 <Link 
                   to="/register"
-                  className="flex items-center justify-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-lg shadow-lg shadow-primary/25 transition-all hover:translate-y-[-1px]" 
+                  className="flex items-center justify-center px-4 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-lg shadow-lg shadow-primary/25 transition-all" 
                 >
                   Register
                 </Link>
