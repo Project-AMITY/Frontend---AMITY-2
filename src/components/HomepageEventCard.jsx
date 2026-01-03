@@ -6,22 +6,54 @@ import ScrollReveal from "./ScrollReveal";
 const HomepageEventCard = () => {
   const [latestEvents, setLatestEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  // Helper function for a safe data extraction
+  const extractEventsArray = (rawData) => {
+    if (Array.isArray(rawData)) return rawData;
+    if (rawData?.content && Array.isArray(rawData.content)) return rawData.content;
+    if (rawData?.events && Array.isArray(rawData.events)) return rawData.events;
+    if (rawData?.data && Array.isArray(rawData.data)) return rawData.data; // Added common 'data' wrapper
+    if (rawData && typeof rawData === "object" && Object.keys(rawData).length > 0 && (rawData.id || rawData.title)) {
+      return [rawData]; // Single event object
+    }
+    return [];
+  };
 
   useEffect(() => {
     const fetchLatestEvents = async () => {
       try {
         setLoading(true);
-        // Step 1: Fetch from your Spring Boot API
-        const response = await axios.get("http://localhost:8080/api/events");
+        setError(null);
 
-        // Step 2: Sort by ID (highest first) and take only the top 4
-        const sorted = response.data.sort((a, b) => b.id - a.id).slice(0, 4);
+        const response = await axios.get("http://localhost:8080/api/event");
 
-        setLatestEvents(sorted);
-        setLoading(false);
+        let eventsArray = extractEventsArray(response.data);
+
+        if (eventsArray.length === 0) {
+          setLatestEvents([]);
+        } else {
+          // Sort by ID (highest first) and take only the top 4
+          const sorted = eventsArray
+            .sort((a, b) => (b.id || 0) - (a.id || 0))
+            .slice(0, 4);
+
+          setLatestEvents(sorted);
+        }
+
       } catch (err) {
         console.error("Error fetching latest events:", err);
+        let message = "Failed to load events.";
+
+        if (err.message.includes("sort is not a function")) {
+             message = "Data Error: API returned an unexpected non-array format. Check console for 'Raw API Response'.";
+        } else if (err.code === "ERR_NETWORK") {
+             message = "Network Error: Cannot connect to backend server on port 8080.";
+        }
+
+        setError(message);
+      } finally {
         setLoading(false);
       }
     };

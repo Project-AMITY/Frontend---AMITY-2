@@ -1,164 +1,250 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import RegHero from '../Components/RegHero';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 const RegForm = () => {
-    // 1. Unified State Object for Backend Delivery
-    const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    university: '',
     email: '',
     password: '',
     confirmPassword: '',
-    agreeToTerms: false
+    subscribed: false,
   });
-  // 2. Dynamic Change Handler
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 3. Submit Handler for Backend API
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Basic Validation logic before sending
+    setError('');
+    setSuccess(false);
+
+    // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match");
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
       return;
     }
 
-    console.log("Data ready for Backend:", formData);
-    // Here you would use fetch() or axios.post('/api/register', formData)
+    setLoading(true);
+
+    try {
+      // Prepare payload matching your User entity
+      const payload = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        university: formData.university,
+        email: formData.email,
+        password: formData.password,
+        subscribed: formData.subscribed,
+        // role will default to USER on backend
+      };
+
+      await axios.post('http://localhost:8080/api/auth/register', payload);
+
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/login'); // Redirect to login after success
+      }, 2000);
+    } catch (err) {
+      const message =
+        err.response?.data ||
+        err.response?.data?.message ||
+        "Registration failed. Please try again.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
-    <div>
-      <div className="w-full max-w-[520px] space-y-8">
-      {/* --- Mobile Only Header --- */}
-      <div className="lg:hidden text-center mb-8">
-        <h1 className="text-gray-900 dark:text-white text-3xl font-black tracking-tight mb-3">Create an account</h1>
-        <p className="text-gray-600 dark:text-[#92a4c9] text-base">Join the centralised hub for inter-university opportunities.</p>
+    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased">
+      <Navbar />
+
+      <div className="flex-1 flex flex-col lg:flex-row h-full">
+        {/* Left Hero Section */}
+        <div className="hidden lg:flex lg:w-1/2 relative bg-[#192233] items-center justify-center overflow-hidden">
+          <RegHero />
+        </div>
+
+        {/* Right Form Section */}
+        <div className="flex-1 flex flex-col justify-center items-center p-8 sm:p-16 lg:p-32 bg-background-light dark:bg-background-dark">
+          <div className="w-full max-w-md">
+            <h2 className="text-4xl font-bold mb-2 text-center">Create Account</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-center mb-8">
+              Join your university community today
+            </p>
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-200 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="mb-6 p-4 bg-green-900/30 border border-green-700 rounded-lg text-green-200 text-sm text-center">
+                Registration successful! Redirecting to login...
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="John"
+                />
+              </div>
+              {/* Test Last Name */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="Doe"
+                />
+              </div>
+
+              {/* Test University */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  University Name
+                </label>
+                <input
+                  type="text"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="University Name"
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="student@university.edu"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="••••••••"
+                />
+              </div>
+
+             {/* test add subscribe or not */}    {/* add corect subscribe tick and description */}
+              {/* <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  Subscribe
+                </label>
+                <input
+                  type="boolean"
+                  name="subscribed"
+                  value={formData.subscribed}
+                  onChange={handleChange}
+                  required
+                  className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  placeholder="true or false"
+                />
+              </div> */}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-14 bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg font-bold text-white transition flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Creating Account...
+                  </>
+                ) : (
+                  "Register"
+                )}
+              </button>
+            </form>
+
+            <p className="mt-8 text-center text-slate-500 dark:text-slate-400 text-sm">
+              Already have an account?{' '}
+              <Link to="/login" className="text-blue-500 font-semibold hover:underline">
+                Sign in here
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
-
-      {/* --- Registration Form --- */}
-      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-        
-        {/* Row: First & Last Name */}
-        <div className="flex flex-col sm:flex-row gap-5">
-          <label className="flex flex-col flex-1 gap-2">
-            <span className="text-gray-900 dark:text-white text-sm font-semibold">First name</span>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#92a4c9] pointer-events-none text-[20px]">person</span>
-              <input 
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                className="form-input w-full rounded-lg border-gray-200 dark:border-[#324467] bg-white dark:bg-[#192233] text-gray-900 dark:text-white h-12 pl-11 pr-4 focus:ring-1 focus:ring-primary outline-none transition-all" 
-                placeholder="Jane" 
-                type="text" 
-                required
-              />
-            </div>
-          </label>
-          <label className="flex flex-col flex-1 gap-2">
-            <span className="text-gray-900 dark:text-white text-sm font-semibold">Last name</span>
-            <input 
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className="form-input w-full rounded-lg border-gray-200 dark:border-[#324467] bg-white dark:bg-[#192233] text-gray-900 dark:text-white h-12 px-4 focus:ring-1 focus:ring-primary outline-none transition-all" 
-              placeholder="Doe" 
-              type="text" 
-              required
-            />
-          </label>
-        </div>
-
-        {/* Email Address */}
-        <label className="flex flex-col gap-2">
-          <span className="text-gray-900 dark:text-white text-sm font-semibold">Email address</span>
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#92a4c9] pointer-events-none text-[20px]">mail</span>
-            <input 
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="form-input w-full rounded-lg border-gray-200 dark:border-[#324467] bg-white dark:bg-[#192233] text-gray-900 dark:text-white h-12 pl-11 pr-4 focus:ring-1 focus:ring-primary outline-none transition-all" 
-              placeholder="jane@university.edu" 
-              type="email" 
-              required
-            />
-          </div>
-        </label>
-
-        {/* Password */}
-        <label className="flex flex-col gap-2">
-          <span className="text-gray-900 dark:text-white text-sm font-semibold">Password</span>
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#92a4c9] pointer-events-none text-[20px]">lock</span>
-            <input 
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="form-input w-full rounded-lg border-gray-200 dark:border-[#324467] bg-white dark:bg-[#192233] text-gray-900 dark:text-white h-12 pl-11 pr-4 focus:ring-1 focus:ring-primary outline-none transition-all" 
-              placeholder="Create a password" 
-              type="password" 
-              minLength="8"
-              required
-            />
-          </div>
-          <p className="text-xs text-gray-500 dark:text-[#64748b] mt-1">Must be at least 8 characters</p>
-        </label>
-
-        {/* Confirm Password */}
-        <label className="flex flex-col gap-2">
-          <span className="text-gray-900 dark:text-white text-sm font-semibold">Confirm password</span>
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#92a4c9] pointer-events-none text-[20px]">lock_reset</span>
-            <input 
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="form-input w-full rounded-lg border-gray-200 dark:border-[#324467] bg-white dark:bg-[#192233] text-gray-900 dark:text-white h-12 pl-11 pr-4 focus:ring-1 focus:ring-primary outline-none transition-all" 
-              placeholder="Confirm your password" 
-              type="password" 
-              required
-            />
-          </div>
-        </label>
-
-        {/* Terms Checkbox */}
-        <div className="flex items-start gap-3 mt-2">
-          <div className="flex items-center h-5">
-            <input 
-              id="terms" 
-              name="agreeToTerms"
-              type="checkbox" 
-              checked={formData.agreeToTerms}
-              onChange={handleChange}
-              className="w-4 h-4 rounded border-gray-300 dark:border-[#324467] text-primary focus:ring-primary dark:bg-[#192233]" 
-              required
-            />
-          </div>
-          <label className="text-sm text-gray-600 dark:text-[#92a4c9]" htmlFor="terms">
-            I agree to the <a className="text-primary hover:underline" href="#">Terms of Service</a> and <a className="text-primary hover:underline" href="#">Privacy Policy</a>.
-          </label>
-        </div>
-
-        {/* Submit Button */}
-        <button type="submit" className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-lg h-12 bg-primary hover:bg-blue-600 text-white text-base font-bold transition-colors shadow-lg shadow-blue-900/20">
-          Create Account
-        </button>
-      </form>
-
-      <p className="text-center text-sm text-gray-500 dark:text-[#64748b] lg:hidden">
-        Already have an account? <a className="text-primary font-bold hover:underline" href="#">Log in</a>
-      </p>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default RegForm
+export default RegForm;

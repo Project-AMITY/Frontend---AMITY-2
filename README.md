@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Amity | Campus Event & Opportunity Hub 🤝
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![React Router](https://img.shields.io/badge/React_Router-6.x-CA4245?style=for-the-badge&logo=react-router&logoColor=white)](https://reactrouter.com/)
+[![Axios](https://img.shields.io/badge/Axios-1.x-5A29E4?style=for-the-badge&logo=axios&logoColor=white)](https://axios-http.com/)
 
-## Available Scripts
+A sophisticated, industry-standard React application designed to facilitate seamless interaction between university students and event organizers. **Amity** leverages modern web technologies to provide a secure, role-based environment for campus opportunity management.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🏛️ Technical Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The frontend is built on a **Component-Based Architecture**, emphasizing modularity, dry principles (Don't Repeat Yourself), and a strict separation of concerns between UI presentation and business logic.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1. State Management & Hooks
+* **Local State**: Utilizes `useState` for granular control of form inputs and UI toggles (e.g., Modals, Search bars).
+* **Side Effects**: Implements `useEffect` for synchronized data fetching and authentication lifecycle management.
+* **Navigation**: Powered by `useNavigate` and `useLocation` for programmatic routing and route-change detection.
 
-### `npm run build`
+### 2. Industry-Grade Logic Implementations
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### **A. Secure JWT Authentication Flow**
+Unlike basic auth systems, Amity uses **JWT (JSON Web Token)** for stateless authentication.
+* **Logic**: Tokens are stored securely in `localStorage`.
+* **Token Decoding**: Integrated `jwt-decode` to parse payload data (Claims) on the client side. This allows the application to dynamically change the UI (e.g., showing Admin dashboards vs. Student profiles) without redundant API calls.
+* **Auth Interceptors**: Configured Axios to automatically attach Bearer tokens to the `Authorization` header for protected endpoints.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### **B. Dynamic Role-Based Dispatching**
+I implemented a **Dispatcher Pattern** for the profile routes. Instead of hardcoding separate pages, a central `ProfileDispatcher` component analyzes the user's role and renders either `UserProfileContent` or `OrgProfileContent`. This reduces routing overhead and improves maintainability.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### **C. Form Logic & Data Serialization**
+* **Complex Forms**: Handled multi-input states using single-handler functions (`handleChange`) with object computed property names.
+* **Schema Alignment**: Implemented logic to transform React state into ISO-standard `LocalDate` and `LocalTime` strings to meet **Spring Boot/Hibernate** entity requirements.
 
-### `npm run eject`
+#### **D. Responsive Design System**
+* **Tailwind CSS**: Custom configuration for a dark-themed, professional aesthetic.
+* **Glassmorphism**: Implemented `backdrop-blur` on the navigation system for a premium, modern feel.
+* **UX Enhancements**: Replaced standard browser `alert()` methods with custom-built Tailwind modals that manage their own animation lifecycle.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🚀 Key Modules
 
-## Learn More
+* **Opportunity Feed**: Real-time listing of workshops, hackathons, and seminars.
+* **Organizer Dashboard**: A restricted environment for event creation, allowing for rich-text descriptions and banner image URL integration.
+* **Profile Management**: Personalized spaces for users to track their activity and organizers to manage their impact stats.
+* **Smart Search**: Client-side filtering logic for rapid discovery of events.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📂 Directory Structure
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```text
+src/
+ ├── assets/          # Localized university icons and brand assets
+ ├── components/      # Atomized UI (Navbar, Modals, EventCards)
+ ├── pages/           # Logic-heavy views (Homepage, Opportunities)
+ ├── utils/           # Helper functions for JWT and Date formatting
+ └── App.js           # Core routing and Context provider setup

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import RegHero from '../components/RegHero';
 import Navbar from '../components/Navbar';
-import RegHero from '../components/RegHero'
+import axios from 'axios';
 
-const Register = () => {
+const RegForm = () => {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -74,12 +74,12 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden antialiased">
-      <Navbar/>
+      <Navbar />
 
       <div className="flex-1 flex flex-col lg:flex-row h-full">
         {/* Left Hero Section */}
         <div className="hidden lg:flex lg:w-1/2 relative bg-[#192233] items-center justify-center overflow-hidden">
-          <RegHero/>
+          <RegHero />
         </div>
 
         {/* Right Form Section */}
@@ -203,7 +203,7 @@ const Register = () => {
               </div>
 
              {/* test add subscribe or not */}    {/* add corect subscribe tick and description */}
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Subscribe
                 </label>
@@ -216,7 +216,7 @@ const Register = () => {
                   className="w-full h-14 px-4 rounded-lg bg-[#192233] dark:bg-[#111722] border border-[#324467] focus:ring-2 focus:ring-blue-500 outline-none transition"
                   placeholder="true or false"
                 />
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <button
@@ -251,4 +251,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegForm;

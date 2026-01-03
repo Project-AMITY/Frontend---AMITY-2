@@ -36,18 +36,21 @@ const Login = () => {
 
       const { token, user } = response.data;
 
-      // Store token and user info
-      localStorage.setItem("token", token);
+      // ------------------------------------------------------------------
+      // FIX: Changed localStorage key from "token" to "jwtToken" 
+      //      to match the key expected by the NewEventForm component.
+      // ------------------------------------------------------------------
+      localStorage.setItem("jwtToken", token); // Use "jwtToken"
       localStorage.setItem("user", JSON.stringify(user));
 
-      console.log("Login successful:", user);
+      console.log("Login successful. Token saved.");
 
       // Redirect to dashboard
       navigate("/");
     } catch (err) {
       const message =
         err.response?.data?.message ||
-        err.response?.data ||
+        err.response?.data?.error || // Added check for common error field
         "Invalid email or password. Please try again.";
       setError(message);
       console.error("Login failed:", err);
@@ -190,5 +193,5 @@ const Login = () => {
     </div>
   );
 };
-
+  
 export default Login;
