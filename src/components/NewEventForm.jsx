@@ -6,19 +6,19 @@ const NewEventForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  // 1. Updated state keys to match your exact API JSON structure
+  // Initial form data structure
   const INITIAL_EVENT_DATA = {
     title: "",
-    image: "", // Banner link
+    image: "", 
     description: "",
     organizer: "",
     highlight: "",
     fee: "Free",
     category: "Technology",
     university: "",
-    eventType: "PHYSICAL", // Matches your Select options
-    eventDate: "", // YYYY-MM-DD
-    eventTime: "", // HH:mm:ss
+    eventType: "PHYSICAL",
+    eventDate: "", 
+    eventTime: "", 
     contactlink: "",
   };
 
@@ -34,7 +34,17 @@ const NewEventForm = () => {
     setLoading(true);
 
     try {
-      // Spring Boot LocalTime often requires HH:mm:ss format
+      // Retrieve the JWT token from storage. This must match the key used in the login function.
+      const token = localStorage.getItem("jwtToken"); 
+      
+      // Safety Check: If token is missing, redirect and stop the request.
+      if (!token || token.length < 10) { 
+        alert("Authentication required. The token is missing or invalid. Please log in.");
+        setLoading(false);
+        navigate("/login"); 
+        return;
+      }
+      
       const formattedData = {
         ...formData,
         eventTime:
@@ -43,22 +53,38 @@ const NewEventForm = () => {
             : formData.eventTime,
       };
 
-      // Exact API endpoint as per your requirement
       const response = await axios.post(
         "http://localhost:8080/api/event",
-        formattedData
+        formattedData,
+        {
+          // Ensure Authorization Header is correctly attached
+          headers: {
+            Authorization: `Bearer ${token}`, 
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 201 || response.status === 200) {
-        alert("Event successfully published to Amity!");
+        alert("Event successfully published!");
         navigate("/opportunities");
       }
     } catch (err) {
-      console.error("Error publishing event:", err);
-      alert(
-        err.response?.data?.message ||
-          "Failed to publish. Check if backend is running."
-      );
+      console.error("Error publishing event:", err.response || err);
+      
+      // Improved error message to reflect the possible 403 Forbidden issue if the user is not an Admin.
+      const status = err.response?.status;
+      let userAlertMessage = "Failed to publish event. ";
+
+      if (status === 403) {
+          userAlertMessage += "Forbidden: You may not have the required Admin role.";
+      } else if (status === 401) {
+          userAlertMessage += "Unauthorized: Your session is expired. Please log in again.";
+      } else {
+          userAlertMessage += "Check server logs for details.";
+      }
+      
+      alert(userAlertMessage);
     } finally {
       setLoading(false);
     }
@@ -79,7 +105,7 @@ const NewEventForm = () => {
               </span>
               <input
                 type="url"
-                name="image" // Matches API key
+                name="image" 
                 value={formData.image}
                 placeholder="https://example.com/your-image.jpg"
                 className="block w-full pl-12 pr-4 py-4 bg-[#111722] border border-[#324467] rounded-xl text-white text-sm focus:ring-2 focus:ring-primary outline-none"
