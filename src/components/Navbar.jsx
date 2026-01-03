@@ -8,7 +8,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const checkAuth = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('JWTtoken');
     if (token) {
       try {
         const decoded = jwtDecode(token);
