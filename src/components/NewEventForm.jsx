@@ -6,6 +6,8 @@ const NewEventForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   // Initial form data structure
   const INITIAL_EVENT_DATA = {
     title: "",
@@ -68,6 +70,7 @@ const NewEventForm = () => {
       if (response.status === 201 || response.status === 200) {
         alert("Event successfully published!");
         navigate("/opportunities");
+        setShowSuccessModal(true);
       }
     } catch (err) {
       console.error("Error publishing event:", err.response || err);
@@ -314,6 +317,26 @@ const NewEventForm = () => {
           </button>
         </div>
       </form>
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+          <div className="relative bg-[#111722] border border-[#324467] rounded-3xl p-10 max-w-sm w-full shadow-2xl text-center transform transition-all animate-in zoom-in duration-300">
+            <div className="size-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/20">
+              <span className="material-symbols-outlined text-green-500 text-5xl">verified</span>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">Event Published!</h3>
+            <p className="text-gray-400 mb-8 leading-relaxed">
+              Your event is now live and visible to the community.
+            </p>
+            <button
+              onClick={() => navigate("/opportunities")}
+              className="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-95"
+            >
+              Continue to Dashboard
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
